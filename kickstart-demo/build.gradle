@@ -1,0 +1,25 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.demo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation("com.graphql-java-kickstart:graphql-spring-boot-starter-test:12.0.0")
+
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+}

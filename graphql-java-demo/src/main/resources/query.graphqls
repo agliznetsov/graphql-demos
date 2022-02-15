@@ -1,0 +1,8 @@
+type Query {
+    bookById(id: ID): Book
+    books(request: FindBookRequest): [Book]!
+}
+
+input FindBookRequest {
+    name: String
+}
