@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Book {
-	String id;
+public class Book implements WithID {
+	int id;
 	String name;
 	int pageCount;
-	String authorId;
+	int authorId;
 }

@@ -6,12 +6,44 @@ type Book {
     comments: [Comment]
 }
 
+type BookConnection {
+    edges: [BookEdge]
+    pageInfo: PageInfo
+}
+
+type BookEdge {
+    node: Book
+    cursor: String
+}
+
+
 type Author {
     id: ID
     firstName: String
     lastName: String
 }
 
+type AuthorConnection {
+    edges: [AuthorEdge]
+    pageInfo: PageInfo
+}
+
+type AuthorEdge {
+    node: Author
+    cursor: String
+}
+
+
+
 type Comment {
     text: String
+}
+
+
+
+type PageInfo {
+    hasPreviousPage: Boolean
+    hasNextPage: Boolean
+    startCursor: String
+    endCursor: String
 }

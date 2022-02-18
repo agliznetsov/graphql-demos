@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Author implements WithID {
-	int id;
-	String firstName;
-	String lastName;
+public class PaginationParameters {
+	Integer limit;
+	String cursor;
+	boolean reversed;
 }
