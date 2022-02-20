@@ -1,8 +1,20 @@
+buildscript{
+	repositories {
+		mavenLocal()
+		dependencies{
+			classpath 'org.graphql.codegen:graphql-codegen-gradle:6.0.0'
+		}
+	}
+}
+
 plugins {
+//	id "org.graphql.codegen" version "6.0.0"
 	id 'org.springframework.boot' version '2.7.0-M1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
+
+apply plugin: 'org.graphql.codegen'
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -30,3 +42,8 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+generateJava {
+	schemaPaths = ["${projectDir}/src/main/resources/graphql"] // List of directories containing schema files
+	packageName = 'com.example.bookdemo' // The package name to use to generate sources
+	subPackageNameTypes = 'model'
+}

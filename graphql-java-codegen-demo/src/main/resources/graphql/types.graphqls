@@ -1,0 +1,56 @@
+directive @fetch(batch: Boolean) on FIELD_DEFINITION
+
+interface WithID {
+    id: Int
+}
+
+type Book implements WithID {
+    id: Int
+    name: String
+    pageCount: Int
+    author: Author @fetch(batch: false)
+    authorId: Int
+    comments: [Comment] @fetch(batch: true)
+}
+
+type BookConnection {
+    edges: [BookEdge]
+    pageInfo: PageInfo
+}
+
+type BookEdge {
+    node: Book
+    cursor: String
+}
+
+
+type Author implements WithID {
+    id: Int
+    firstName: String
+    lastName: String
+}
+
+type AuthorConnection {
+    edges: [AuthorEdge]
+    pageInfo: PageInfo
+}
+
+type AuthorEdge {
+    node: Author
+    cursor: String
+}
+
+
+
+type Comment {
+    text: String
+}
+
+
+
+type PageInfo {
+    hasPreviousPage: Boolean
+    hasNextPage: Boolean
+    startCursor: String
+    endCursor: String
+}

@@ -1,0 +1,13 @@
+type Query {
+    bookById(id: Int): Book
+    books(request: FindBookRequest, first: Int, after: String, last: Int, before: String): BookConnection
+    authors(request: FindAuthorRequest, first: Int, after: String, last: Int, before: String): AuthorConnection
+}
+
+input FindBookRequest {
+    name: String
+}
+
+input FindAuthorRequest {
+    name: String
+}
