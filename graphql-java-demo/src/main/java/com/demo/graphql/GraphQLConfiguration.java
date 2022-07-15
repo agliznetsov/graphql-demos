@@ -2,19 +2,16 @@ package com.demo.graphql;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
-import javax.annotation.PostConstruct;
 
 import org.dataloader.BatchLoader;
 import org.dataloader.DataLoader;
 import org.dataloader.DataLoaderFactory;
 import org.dataloader.DataLoaderRegistry;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import com.demo.graphql.model.Book;
 import com.demo.graphql.model.Comment;
@@ -22,7 +19,6 @@ import com.demo.graphql.model.FindBookRequest;
 import com.demo.graphql.model.MockData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import graphql.ExecutionInput;
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLSchema;
@@ -31,24 +27,22 @@ import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 
-@Component
-public class GraphQLProvider {
+@Configuration
+public class GraphQLConfiguration {
 	private ObjectMapper objectMapper = new ObjectMapper();
-	private GraphQL graphQL;
-	private DataLoaderRegistry dataLoaderRegistry = new DataLoaderRegistry();
 
 	@Bean
-	public GraphQL graphQL() {
-		return graphQL;
+	public GraphQL graphQL(GraphQLSchema graphQLSchema) {
+		return GraphQL.newGraphQL(graphQLSchema).build();
 	}
 
 	@Bean
 	public DataLoaderRegistry dataLoaderRegistry() {
-		return dataLoaderRegistry;
+		return new DataLoaderRegistry();
 	}
 
-	@PostConstruct
-	public void init() {
+	@Bean
+	public GraphQLSchema graphQLSchema(DataLoaderRegistry dataLoaderRegistry) {
 		SchemaParser schemaParser = new SchemaParser();
 		SchemaGenerator schemaGenerator = new SchemaGenerator();
 		TypeDefinitionRegistry typeRegistry = new TypeDefinitionRegistry();
@@ -57,10 +51,10 @@ public class GraphQLProvider {
 		typeRegistry.merge(schemaParser.parse(getClass().getResourceAsStream("/types.graphqls")));
 		typeRegistry.merge(schemaParser.parse(getClass().getResourceAsStream("/query.graphqls")));
 
-		GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, buildWiring());
+		return schemaGenerator.makeExecutableSchema(typeRegistry, buildWiring(dataLoaderRegistry));
 	}
 
-	private RuntimeWiring buildWiring() {
+	private RuntimeWiring buildWiring(DataLoaderRegistry dataLoaderRegistry) {
 		dataLoaderRegistry.register("comments", DataLoaderFactory.newDataLoader(commentsBatchLoader()));
 
 		//data fetchers must match schema definition!
